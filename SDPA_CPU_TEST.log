@@ -1,0 +1,13 @@
+test_alignment_preserves_cuda_native_baseline (test_sdpa_precision.SDPAPrecisionTests) ... ok
+test_cast_back_matches_promoted_result (test_sdpa_precision.SDPAPrecisionTests) ... ok
+test_cli_reports_and_saved_comparison (test_sdpa_precision.SDPAPrecisionTests) ... /home/hc/envs/gns83/lib/python3.10/site-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+ok
+test_fp64_reference_matches_pytorch_sdpa (test_sdpa_precision.SDPAPrecisionTests) ... ok
+test_outer_autocast_does_not_lower_promoted_output (test_sdpa_precision.SDPAPrecisionTests) ... ok
+test_output_dtypes (test_sdpa_precision.SDPAPrecisionTests) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.089s
+
+OK
