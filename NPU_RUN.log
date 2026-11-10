@@ -1,0 +1,18 @@
+/home/hc/envs/gns83/lib/python3.10/site-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+Device: npu:7 (Ascend910B3); FP32 TF32/HF32 disabled
+dtype  operator           max_abs         RMSE    rel_L2(%)
+fp32   linear         8.09592e-07  6.90102e-08  1.76355e-05
+fp32   layer_norm     7.95245e-07  7.06440e-08  7.05476e-06
+fp32   gelu_erf       1.05576e-06  7.35723e-08  5.92503e-06
+fp32   gelu_native    4.73517e-04  2.00344e-04  1.61344e-02
+fp32   sdpa           1.36038e-07  1.36375e-08  2.59265e-05
+fp32   patch_embed    1.74566e-06  1.39086e-07  2.50192e-05
+fp16   linear         4.88388e-04  8.10091e-05  2.07019e-02
+fp16   layer_norm     1.80828e-03  2.08149e-04  2.07871e-02
+fp16   gelu_erf       1.92242e-03  3.21147e-04  2.58631e-02
+fp16   gelu_native    1.43779e-03  2.99706e-04  2.41363e-02
+fp16   sdpa           1.15243e-04  1.46062e-05  2.77682e-02
+fp16   patch_embed    1.88182e-03  1.61762e-04  2.90981e-02
+
+Saved: /home/hc/diagnostics/dino_core_ops_compare_20261109/npu_results

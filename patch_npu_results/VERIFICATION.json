@@ -1,0 +1,9 @@
+{
+  "inputs_script_helper_outputs_sha256_verified": true,
+  "matches_prior_core_patch_output_elementwise": {
+    "fp32": true,
+    "fp16": true
+  },
+  "local_smoke_tests": "FP64 equivalence, six outputs, same-device pairs and exact cross-run comparison passed",
+  "offline_comparator_smoke_test": "Six rows checked against a synthetic comparator fixture, exact native self-comparison and known same-device differences; no A100 hardware run."
+}

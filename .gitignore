@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+a100_results*/
+patch_a100_comparison*/
+patch_a100_results*/
+npu_results_new*/
+patch_npu_results_new*/
