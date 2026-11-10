@@ -1,0 +1,17 @@
+/home/hc/envs/gns83/lib/python3.10/site-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+Device: npu:7 (Ascend910B3); fixed Q/K/V, no mask or dropout
+Accuracy reference: CPU FP64 using the same dtype-rounded Q/K/V
+dtype  variant                 max_abs         RMSE    rel_L2(%)
+fp16   native              1.15243e-04  1.46062e-05  2.77682e-02
+fp16   fp32_compute        2.48103e-07  1.37617e-08  2.61625e-05
+fp16   fp32_cast_back      1.15243e-04  1.08633e-05  2.06525e-02
+Timing fp16 native: 0.2381 ms
+Timing fp16 fp32_cast_back: 0.2993 ms
+bf16   native              8.04199e-04  1.16911e-04  2.22254e-01
+bf16   fp32_compute        1.86945e-07  1.25996e-08  2.39524e-05
+bf16   fp32_cast_back      8.00121e-04  8.69345e-05  1.65267e-01
+Timing bf16 native: 0.2397 ms
+Timing bf16 fp32_cast_back: 0.3078 ms
+
+Saved: /home/hc/diagnostics/sdpa_precision_experiment_20261110/sdpa_npu_results

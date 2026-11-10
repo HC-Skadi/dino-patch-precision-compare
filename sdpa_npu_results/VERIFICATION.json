@@ -1,0 +1,16 @@
+{
+  "inputs_and_outputs_verified": true,
+  "script_and_helper_verified": true,
+  "checks": {
+    "fp16": {
+      "native_matches_previous_npu_output": true,
+      "cast_back_matches_rounding_promoted_output": true,
+      "previous_report_sha256": "da0e51a61b73f70cf829271a5d5555521faeed5b20c05911924cb90cbd0b9286"
+    },
+    "bf16": {
+      "native_matches_previous_npu_output": true,
+      "cast_back_matches_rounding_promoted_output": true,
+      "previous_report_sha256": "418170ce319b6accf2e21037ebae68d2498acbf9eeb9ea1a6265c881a0ac96f7"
+    }
+  }
+}

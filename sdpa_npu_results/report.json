@@ -1,0 +1,220 @@
+{
+  "device": "npu:7",
+  "device_name": "Ascend910B3",
+  "torch": "2.9.0+cpu",
+  "torch_npu": "2.9.0",
+  "numpy": "2.2.6",
+  "cuda_version": null,
+  "spec": {
+    "qkv_shapes": [
+      [
+        1,
+        6,
+        1029,
+        64
+      ],
+      [
+        1,
+        6,
+        1029,
+        64
+      ],
+      [
+        1,
+        6,
+        1029,
+        64
+      ]
+    ],
+    "mask": null,
+    "dropout": 0.0,
+    "causal": false,
+    "variants": [
+      "native",
+      "fp32_compute",
+      "fp32_cast_back"
+    ]
+  },
+  "dtypes": [
+    "fp16",
+    "bf16"
+  ],
+  "precision_flags": {
+    "matmul_allow_hf32": false,
+    "conv_allow_hf32": false
+  },
+  "backend_selection": "automatic PyTorch SDPA; autocast disabled",
+  "reference": "CPU FP64 using the same dtype-rounded Q/K/V",
+  "input_kind": "existing fixed synthetic operator fixture, not model activations",
+  "inputs_sha256": "8e542442baa74a4db2697293f0826b5c536f25bb5a190bfd9fdb99feebb37502",
+  "outputs_sha256": "e6e0d36596519a9ba812bab3be509c1bfb7a3968f99c9b565becdead9e9df402",
+  "script_sha256": "df19fba8636a3e2d1442b9bd1e866317a9afb445dcb4d1fec1d13c9fdd819283",
+  "helper_script_sha256": "bf49a1564c2b615c65c9f53471998e3b1887bd19ecbe50152a4c9d3f6079df71",
+  "output_metadata": {
+    "fp16__native": {
+      "shape": [
+        1,
+        6,
+        1029,
+        64
+      ],
+      "output_dtype": "torch.float16",
+      "sdpa_input_dtype": "torch.float16"
+    },
+    "fp16__fp32_compute": {
+      "shape": [
+        1,
+        6,
+        1029,
+        64
+      ],
+      "output_dtype": "torch.float32",
+      "sdpa_input_dtype": "torch.float32"
+    },
+    "fp16__fp32_cast_back": {
+      "shape": [
+        1,
+        6,
+        1029,
+        64
+      ],
+      "output_dtype": "torch.float16",
+      "sdpa_input_dtype": "torch.float32"
+    },
+    "bf16__native": {
+      "shape": [
+        1,
+        6,
+        1029,
+        64
+      ],
+      "output_dtype": "torch.bfloat16",
+      "sdpa_input_dtype": "torch.bfloat16"
+    },
+    "bf16__fp32_compute": {
+      "shape": [
+        1,
+        6,
+        1029,
+        64
+      ],
+      "output_dtype": "torch.float32",
+      "sdpa_input_dtype": "torch.float32"
+    },
+    "bf16__fp32_cast_back": {
+      "shape": [
+        1,
+        6,
+        1029,
+        64
+      ],
+      "output_dtype": "torch.bfloat16",
+      "sdpa_input_dtype": "torch.float32"
+    }
+  },
+  "rows": [
+    {
+      "dtype": "fp16",
+      "variant": "native",
+      "max_abs": 0.00011524329441442438,
+      "mean_abs": 1.1195231013227913e-05,
+      "rmse": 1.4606231358918364e-05,
+      "relative_l2_pct": 0.027768151357169688
+    },
+    {
+      "dtype": "fp16",
+      "variant": "fp32_compute",
+      "max_abs": 2.4810254617424476e-07,
+      "mean_abs": 1.0315973217267922e-08,
+      "rmse": 1.3761665108329903e-08,
+      "relative_l2_pct": 2.6162532296289882e-05
+    },
+    {
+      "dtype": "fp16",
+      "variant": "fp32_cast_back",
+      "max_abs": 0.00011524329441442438,
+      "mean_abs": 7.3490510573691966e-06,
+      "rmse": 1.0863335746645412e-05,
+      "relative_l2_pct": 0.020652469746921566
+    },
+    {
+      "dtype": "bf16",
+      "variant": "native",
+      "max_abs": 0.0008041986721938066,
+      "mean_abs": 8.95215339000083e-05,
+      "rmse": 0.00011691113358312571,
+      "relative_l2_pct": 0.22225404813803418
+    },
+    {
+      "dtype": "bf16",
+      "variant": "fp32_compute",
+      "max_abs": 1.8694488107540153e-07,
+      "mean_abs": 9.354026516460557e-09,
+      "rmse": 1.2599559527896587e-08,
+      "relative_l2_pct": 2.3952407474007214e-05
+    },
+    {
+      "dtype": "bf16",
+      "variant": "fp32_cast_back",
+      "max_abs": 0.0008001209931695064,
+      "mean_abs": 5.876483067585571e-05,
+      "rmse": 8.693450765808892e-05,
+      "relative_l2_pct": 0.16526694813166876
+    }
+  ],
+  "input_rounding_vs_original_fp64": [
+    {
+      "dtype": "fp16",
+      "max_abs": 0.00026373257399718575,
+      "mean_abs": 1.4938603431283326e-05,
+      "rmse": 1.9162472440214873e-05,
+      "relative_l2_pct": 0.03643006861222524
+    },
+    {
+      "dtype": "bf16",
+      "max_abs": 0.002209833522525406,
+      "mean_abs": 0.00012084964101410301,
+      "rmse": 0.0001553763243926273,
+      "relative_l2_pct": 0.29538830002227695
+    }
+  ],
+  "timing": [
+    {
+      "dtype": "fp16",
+      "variant": "native",
+      "mean_ms": 0.23807520046830177,
+      "median_ms": 0.23478036746382713,
+      "min_ms": 0.2277502790093422,
+      "warmup": 3,
+      "repeat": 10
+    },
+    {
+      "dtype": "fp16",
+      "variant": "fp32_cast_back",
+      "mean_ms": 0.2993402071297169,
+      "median_ms": 0.2986551262438297,
+      "min_ms": 0.2866806462407112,
+      "warmup": 3,
+      "repeat": 10
+    },
+    {
+      "dtype": "bf16",
+      "variant": "native",
+      "mean_ms": 0.23967521265149117,
+      "median_ms": 0.2360953949391842,
+      "min_ms": 0.2276599407196045,
+      "warmup": 3,
+      "repeat": 10
+    },
+    {
+      "dtype": "bf16",
+      "variant": "fp32_cast_back",
+      "mean_ms": 0.30781207606196404,
+      "median_ms": 0.3087995573878288,
+      "min_ms": 0.2909693866968155,
+      "warmup": 3,
+      "repeat": 10
+    }
+  ],
+  "timing_scope": "device-resident SDPA call; promoted path includes Q/K/V casts and output cast"
+}

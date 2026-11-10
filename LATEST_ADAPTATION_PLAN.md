@@ -102,16 +102,24 @@ A100 原始输出目前位于用户机器的 `/workspace/dino-patch-precision-co
 
 BF16 核心算子和三种 Patch 路径已在 node02 完成。沿用同一份输入，没有执行完整模型 BF16 或性能测试。
 
-相对同精度舍入输入的 CPU FP64 参考，BF16 Linear / LayerNorm 的相对 L2 差约 0.166%，SDPA 约 0.222%，当前 Patch 约 0.235%。这些数值尚未涉及 A100，不能与跨设备指标直接混用。
+相对同精度舍入输入的 CPU FP64 参考，BF16 Linear / LayerNorm 的相对 L2 差约 0.166%，SDPA 约 0.222%，当前 Patch 约 0.235%。这些属于参考精度指标，不能与跨设备指标直接混用。
+
+用户已回传 A100 / NPU 的 BF16 核心算子结果：SDPA 跨设备相对 L2 差为 0.238487%，约为 FP16 0.029874% 的 8 倍；显式 erf GELU 逐元素相同，当前 Patch 的相对 L2 差为 0.00853799%。下一项实验聚焦 SDPA，不同时修改其他算子。
 
 BF16 带 bias Linear 与 NPU Conv2d 的逐元素一致率为 99.98423%，独立 bias 为 73.96978%。最终选择仍需要 A100 BF16 对比，当前正式 Patch 实现保持不变。
 
 执行脚本与 NPU 数组：`/Users/hc/Documents/Codex/2026-10-28/11/outputs/dino-patch-precision-compare`。A100 使用 `bash run_a100_bf16.sh`，详细说明见同目录的 `BF16_README.md`。
 
-## 7. 接下来的实验顺序
+## 7. SDPA 控制实验与下一步
 
-1. 执行 A100 BF16 核心算子和 Patch 对比，补齐同精度跨设备结果。
-2. 保持 Patch、GELU 和所有输出头不变，仅将 FP16 输入的 SDPA 运算提高到 FP32，比较同批输入的骨干 CLS、分类、能量和方向，再记录纯前向耗时。这是待实现的实验项。
+三组独立实验已经实现：A 使用原生低精度 SDPA；B 将同一份已经舍入的 Q/K/V 转为 FP32，保留 FP32 输出；C 将 B 的同一次输出转换回原精度。固定输入形状为 `[1, 6, 1029, 64]`，分别测试 FP16、BF16。
+
+NPU 短测试已完成。相对同精度输入的 CPU FP64 参考，C 的相对 L2 差比 A 降低约 25.6%；FP16 为 0.0277682% → 0.0206525%，BF16 为 0.222254% → 0.165267%。C 的 SDPA 平均耗时分别增加约 26%、28%，不代表整模型的耗时变化。B 保留 FP32 输出时，相对 L2 差分别为 0.0000261625%、0.0000239524%。
+
+这份结果尚不能判断候选更接近 A100。实际适配以“NPU C 对未修改的 CUDA A”为主要判据，避免同时修改两端后偏离原 CUDA 基准。详细命令与记录见 `SDPA_EXPERIMENT.md`。
+
+1. 在 A100 执行三组 SDPA 实验，对照仓库的 `sdpa_npu_results/`，重点查看 `alignment_to_cuda_native.csv`。
+2. 只有 NPU C 对原 CUDA A 明显改善，才进行完整模型单批验证。固定 16 个合成事件，保持 CUDA 原模型、Patch、GELU 和输出头不变，仅替换 NPU SDPA，比较 CLS、分类、能量、方向和纯前向耗时。Pass2 先冻结同一事件和条件输入，再恢复完整两阶段链路。
 3. 如果能量差仍然明显，比较同事件的逐层骨干输出，定位差异增大的层，再决定局部 FP32 范围。
 4. 提供真实 WDS 后，先完成 FP32 的 A100 / NPU 整模型一致性验证，再决定 FP16 / BF16 是否满足任务要求。首轮使用一个小批次，不自动开展全量实验。
 
@@ -124,5 +132,6 @@ BF16 带 bias Linear 与 NPU Conv2d 的逐元素一致率为 99.98423%，独立 
 - FP16 复测：`/Users/hc/Documents/Codex/2026-10-28/11/outputs/dino_cellaware_analysis_20261109/batch64_fp16_repeat_20261109_162446/README.md`。
 - FP32 能量头实验：`/Users/hc/Documents/Codex/2026-10-28/11/outputs/dino_cellaware_analysis_20261109/batch64_mixed_energy_fp32_20261109_170512/README.md`。
 - BF16 记录：`/Users/hc/Documents/Codex/2026-10-28/11/outputs/dino-patch-precision-compare/BF16_README.md`。
+- SDPA 控制实验：`/Users/hc/Documents/Codex/2026-10-28/11/outputs/dino-patch-precision-compare/SDPA_EXPERIMENT.md`，原始 NPU 结果位于同目录的 `sdpa_npu_results/`。
 
-本次仅整理说明并增加独立 BF16 算子实验。正式模型代码、原始权重、输入数据和默认精度保持不变，没有生成新的交付压缩包。
+本次完成独立 BF16 算子实验和第一阶段 NPU SDPA 控制实验，完整模型 SDPA 实验尚未启动。正式模型代码、原始权重、输入数据和默认精度保持不变，没有生成新的交付压缩包。

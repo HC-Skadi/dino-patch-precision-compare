@@ -58,6 +58,7 @@ python3 -B -u compare_sdpa_precision.py \
 
 ```bash
 cd /workspace/dino-patch-precision-compare
+git pull --ff-only
 python3 -u compare_sdpa_precision.py \
   --device cuda:0 --dtypes fp16 bf16 \
   --out sdpa_a100_results \
@@ -83,6 +84,28 @@ python3 -u compare_sdpa_precision.py \
 
 只有候选的任务输出得到改善，再评估额外耗时是否值得。当前没有既定的业务验收阈值，不将算子级改善直接标记为模型精度通过。
 
+## 第一阶段 NPU 实测
+
+2026-11-10 已在 node02 的 Ascend 910B3、npu:7 完成短测试。使用原固定输入，PyTorch / torch_npu 2.9.0，预热 3 次、同步测量 10 次。
+
+以下是 NPU 输出对“同精度舍入输入的 CPU FP64 参考”的相对 L2 差，单位为百分比，尚未涉及 A100：
+
+| 输入精度 | A：原生 SDPA | B：保留 FP32 输出 | C：转换回原精度 |
+|---|---:|---:|---:|
+| FP16 | 0.0277682% | 0.0000261625% | 0.0206525% |
+| BF16 | 0.222254% | 0.0000239524% | 0.165267% |
+
+| 输入精度 | A 平均耗时 | C 平均耗时 | SDPA 耗时变化 |
+|---|---:|---:|---:|
+| FP16 | 0.2381 ms | 0.2993 ms | 约 +26% |
+| BF16 | 0.2397 ms | 0.3078 ms | 约 +28% |
+
+保留 FP32 输出时运算误差明显降低，转换回低精度后仍有输出舍入误差。C 对 FP64 参考的相对 L2 差比 A 降低约 25.6%，但这不能直接证明已经更接近 CUDA 原路径。耗时变化只描述本次 SDPA 算子，不代表完整模型增加同样比例。
+
+原始数组和报告位于 `sdpa_npu_results/`，执行日志为 `SDPA_NPU_RUN.log`。A100 命令可以直接读取这份结果；两端完成后，重点查看 `alignment_to_cuda_native.csv`。
+
+`sdpa_npu_results/VERIFICATION.json` 记录输入、脚本和输出摘要核验。FP16 / BF16 的 A 输出分别与此前核心算子实验逐元素相同，C 与 B 转换回目标精度的结果逐元素相同，确认原基准复现正确且 B、C 仅有输出转换的区别。
+
 ## 文件与状态
 
 - `compare_sdpa_precision.py`：三组 SDPA 控制实验与短计时。
@@ -92,4 +115,4 @@ python3 -u compare_sdpa_precision.py \
 - `alignment_to_cuda_native.csv`：NPU 原路径和候选路径分别对照未修改的 CUDA 原路径，这是实际适配的主要结果。
 - `accuracy.csv`、`input_rounding.csv`、`timing.csv`：运算精度、输入舍入与计时。
 
-六项小规模 CPU 测试全部通过，日志见 `SDPA_CPU_TEST.log`。这些检查核对精度边界与报告，不代表设备实验结果；第一阶段 NPU / A100 测试和第二阶段完整模型实验尚未执行。
+六项小规模 CPU 测试全部通过，日志见 `SDPA_CPU_TEST.log`。第一阶段 NPU 测试已完成，A100 对比等待执行；第二阶段完整模型实验尚未启动，正式模型代码和默认精度保持不变。
