@@ -120,6 +120,7 @@ CPU FP64 仅用于生成数值参考，待测算子在指定设备上完整执�
 - `run_a100_bf16.sh`、`BF16_README.md`：BF16 执行入口与测试记录。
 - [最新适配方案](LATEST_ADAPTATION_PLAN.md)：第六模型当前实现、精度选择、实验结论与下一步安排；本仓库不包含完整模型工作包。
 - [SDPA 控制实验](SDPA_EXPERIMENT.md)：分别隔离 attention 运算、输出转换和输入舍入的影响，提供 NPU / A100 命令。
+- [GLM attention 对比](GLM_ATTENTION_EXPERIMENT.md)：CUDA 直接调用 FlashAttention 2，NPU 复用 Transformers SDPA，分别对照 prefill、单 token decode 和多 token decode；不加载模型权重。
 - `sdpa_npu_results/`、`SDPA_NPU_RUN.log`：SDPA 三组控制实验的 NPU 数组、精度指标和短计时，供 A100 直接对照。
 - `inputs.npz`：固定合成输入和测试权重。
 - `npu_results/`、`patch_npu_results/`：原始 NPU 数组、指标、环境和检查记录。

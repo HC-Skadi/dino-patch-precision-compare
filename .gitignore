@@ -12,3 +12,5 @@ npu_results_new*/
 patch_npu_results_new*/
 sdpa_a100_results*/
 sdpa_npu_results_new*/
+glm_attn_a100_results*/
+glm_attn_npu_results_new*/

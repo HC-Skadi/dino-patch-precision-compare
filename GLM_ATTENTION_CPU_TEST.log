@@ -1,0 +1,20 @@
+test_cached_mask_uses_bottom_right_positions (test_glm_attention.GLMAttentionTests) ... ok
+test_comparison_keeps_cuda_as_reference (test_glm_attention.GLMAttentionTests) ... ok
+test_cuda_receives_bshd_and_causal_flag (test_glm_attention.GLMAttentionTests) ... ok
+test_fixture_hash_and_rounding_are_repeatable (test_glm_attention.GLMAttentionTests) ... ok
+test_installed_hf_sdpa_gqa_and_causal_dispatch (test_glm_attention.GLMAttentionTests) ... ok
+test_npu_receives_matching_masks_and_gqa_groups (test_glm_attention.GLMAttentionTests) ... ok
+test_output_bits_preserve_bf16_and_fp16 (test_glm_attention.GLMAttentionTests) ... ok
+test_prefill_decode_and_chunk_reference_consistency (test_glm_attention.GLMAttentionTests) ... ok
+
+NPU Transformers SDPA vs unchanged CUDA FlashAttention 2
+case                max_abs         RMSE    rel_L2(%)
+prefill         0.00000e+00  0.00000e+00  0.00000e+00
+decode          0.00000e+00  0.00000e+00  0.00000e+00
+chunk_decode    0.00000e+00  0.00000e+00  0.00000e+00
+test_reference_matches_explicit_cpu_sdpa (test_glm_attention.GLMAttentionTests) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 5.813s
+
+OK
