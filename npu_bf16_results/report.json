@@ -1,0 +1,156 @@
+{
+  "device": "npu:7",
+  "device_name": "Ascend910B3",
+  "spec": {
+    "batch": 1,
+    "tokens": 1029,
+    "hidden": 384,
+    "intermediate": 1536,
+    "heads": 6,
+    "head_dim": 64,
+    "image": 512,
+    "patch": 16,
+    "layer_norm_eps": 1e-05,
+    "seed": 20261109
+  },
+  "torch": "2.9.0+cpu",
+  "numpy": "2.2.6",
+  "cuda_version": null,
+  "torch_npu": "2.9.0",
+  "precision_flags": {
+    "matmul_allow_hf32": false,
+    "conv_allow_hf32": false
+  },
+  "cases": [
+    "linear",
+    "layer_norm",
+    "gelu_erf",
+    "gelu_native",
+    "sdpa",
+    "patch_embed"
+  ],
+  "dtypes": [
+    "bf16"
+  ],
+  "sdpa_selection": "automatic PyTorch backend; no mask, no dropout, noncausal",
+  "patch_implementation": "linear + separate bias",
+  "reference": "CPU FP64 applied to the same dtype-rounded inputs; original FP32 inputs also reported",
+  "input_kind": "fixed synthetic operator fixtures, not model activations",
+  "inputs_sha256": "8e542442baa74a4db2697293f0826b5c536f25bb5a190bfd9fdb99feebb37502",
+  "outputs_sha256": "5ed2fad133d49e00f81a52cb19c80d7db62784b38d3e104827cdfa66e40d5079",
+  "script_sha256": "bf49a1564c2b615c65c9f53471998e3b1887bd19ecbe50152a4c9d3f6079df71",
+  "output_metadata": {
+    "bf16__linear": {
+      "shape": [
+        1,
+        1029,
+        1152
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "bf16__layer_norm": {
+      "shape": [
+        1,
+        1029,
+        384
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "bf16__gelu_erf": {
+      "shape": [
+        1,
+        1029,
+        1536
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "bf16__gelu_native": {
+      "shape": [
+        1,
+        1029,
+        1536
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "bf16__sdpa": {
+      "shape": [
+        1,
+        6,
+        1029,
+        64
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "bf16__patch_embed": {
+      "shape": [
+        1,
+        384,
+        32,
+        32
+      ],
+      "output_dtype": "torch.bfloat16"
+    }
+  },
+  "rows": [
+    {
+      "dtype": "bf16",
+      "operator": "linear",
+      "max_abs": 0.003905401099473238,
+      "mean_abs": 0.00043985579699874284,
+      "rmse": 0.0006487345893344962,
+      "relative_l2_pct": 0.1657813937423436,
+      "max_abs_vs_original_fp64": 0.0070304380035732805,
+      "relative_l2_pct_vs_original_fp64": 0.28745851426403063
+    },
+    {
+      "dtype": "bf16",
+      "operator": "layer_norm",
+      "max_abs": 0.01497603425818017,
+      "mean_abs": 0.001128569968846338,
+      "rmse": 0.0016667621791446492,
+      "relative_l2_pct": 0.166442926413853,
+      "max_abs_vs_original_fp64": 0.031111381917478198,
+      "relative_l2_pct_vs_original_fp64": 0.2968526772829833
+    },
+    {
+      "dtype": "bf16",
+      "operator": "gelu_erf",
+      "max_abs": 0.008367355521759379,
+      "mean_abs": 0.0013125368013375688,
+      "rmse": 0.0020560612052619594,
+      "relative_l2_pct": 0.16558141938086973,
+      "max_abs_vs_original_fp64": 0.017579078674311077,
+      "relative_l2_pct_vs_original_fp64": 0.2420484203168006
+    },
+    {
+      "dtype": "bf16",
+      "operator": "gelu_native",
+      "max_abs": 0.00819434889640025,
+      "mean_abs": 0.0009331322997299532,
+      "rmse": 0.0017369619976250366,
+      "relative_l2_pct": 0.13988330320190848,
+      "max_abs_vs_original_fp64": 0.017579078674311077,
+      "relative_l2_pct_vs_original_fp64": 0.22544914586339854
+    },
+    {
+      "dtype": "bf16",
+      "operator": "sdpa",
+      "max_abs": 0.0008041986721938066,
+      "mean_abs": 8.95215339000083e-05,
+      "rmse": 0.00011691113358312571,
+      "relative_l2_pct": 0.22225404813803418,
+      "max_abs_vs_original_fp64": 0.0024426671388663723,
+      "relative_l2_pct_vs_original_fp64": 0.36972621661117727
+    },
+    {
+      "dtype": "bf16",
+      "operator": "patch_embed",
+      "max_abs": 0.015115805203095078,
+      "mean_abs": 0.0008387890876812541,
+      "rmse": 0.001306831811064514,
+      "relative_l2_pct": 0.2350768540950205,
+      "max_abs_vs_original_fp64": 0.01641463399746268,
+      "relative_l2_pct_vs_original_fp64": 0.33194169778589433
+    }
+  ]
+}

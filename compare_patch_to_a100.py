@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 from compare_patch_precision import VARIANTS, detailed_metrics
-from compare_core_ops import sha256, write_csv
+from compare_core_ops import DEFAULT_DTYPES, DTYPES, sha256, write_csv
 
 
 def main():
@@ -13,6 +13,7 @@ def main():
     parser.add_argument("--npu-results", type=Path, default=Path("patch_npu_results"))
     parser.add_argument("--a100-results", type=Path, default=Path("a100_results"))
     parser.add_argument("--out", type=Path, default=Path("patch_a100_comparison"))
+    parser.add_argument("--dtypes", nargs="+", choices=DTYPES, default=list(DEFAULT_DTYPES))
     args = parser.parse_args()
     npu = json.loads((args.npu_results / "report.json").read_text())
     cuda = json.loads((args.a100_results / "report.json").read_text())
@@ -30,7 +31,7 @@ def main():
     print(f"{'dtype':<6} {'NPU variant':<23} {'max_abs':>12} {'RMSE':>12} {'equal(%)':>12}")
     with np.load(args.npu_results / "outputs.npz", allow_pickle=False) as candidate, \
             np.load(args.a100_results / "outputs.npz", allow_pickle=False) as baseline:
-        for dtype in ("fp32", "fp16"):
+        for dtype in args.dtypes:
             for variant in VARIANTS:
                 row = dict(dtype=dtype, npu_variant=variant, a100_reference="conv2d",
                            **detailed_metrics(candidate[f"{dtype}__{variant}"],
@@ -42,6 +43,7 @@ def main():
     report = dict(npu_report=str(args.npu_results / "report.json"),
                   a100_report=str(args.a100_results / "report.json"),
                   inputs_sha256=npu["inputs_sha256"], rows=rows,
+                  dtypes=args.dtypes,
                   script_sha256=sha256(__file__),
                   compared_outputs_sha256=dict(npu=npu["outputs_sha256"], cuda=cuda["outputs_sha256"]))
     (args.out / "comparison.json").write_text(json.dumps(report, indent=2) + "\n")

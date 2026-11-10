@@ -4,7 +4,9 @@ __pycache__/
 .venv/
 venv/
 a100_results*/
+a100_bf16_results*/
 patch_a100_comparison*/
+patch_a100_bf16_comparison*/
 patch_a100_results*/
 npu_results_new*/
 patch_npu_results_new*/

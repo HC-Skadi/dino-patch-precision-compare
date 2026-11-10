@@ -1,0 +1,187 @@
+{
+  "device": "npu:7",
+  "device_name": "Ascend910B3",
+  "torch": "2.9.0+cpu",
+  "torch_npu": "2.9.0",
+  "numpy": "2.2.6",
+  "cuda_version": null,
+  "precision_flags": {
+    "matmul_allow_hf32": false,
+    "conv_allow_hf32": false
+  },
+  "spec": {
+    "image_shape": [
+      1,
+      3,
+      512,
+      512
+    ],
+    "weight_shape": [
+      384,
+      3,
+      16,
+      16
+    ],
+    "bias_shape": [
+      384
+    ],
+    "variants": [
+      "conv2d",
+      "linear_separate_bias",
+      "linear_with_bias"
+    ]
+  },
+  "input_kind": "fixed synthetic fixture shared with the core operator comparison",
+  "dtypes": [
+    "bf16"
+  ],
+  "reference": "CPU FP64 Conv2d using the same dtype-rounded input and weights",
+  "inputs_sha256": "8e542442baa74a4db2697293f0826b5c536f25bb5a190bfd9fdb99feebb37502",
+  "outputs_sha256": "a9eb430bf583ee10d97a472951213dc8dcccf527f990f984b713c8aa92bfa01d",
+  "script_sha256": "e9328330c2574ee6bec6e6d9684b035ff9b735f130ee9326dbb4279faca5faa1",
+  "helper_script_sha256": "bf49a1564c2b615c65c9f53471998e3b1887bd19ecbe50152a4c9d3f6079df71",
+  "output_metadata": {
+    "bf16__conv2d": {
+      "shape": [
+        1,
+        384,
+        32,
+        32
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "bf16__linear_separate_bias": {
+      "shape": [
+        1,
+        384,
+        32,
+        32
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "bf16__linear_with_bias": {
+      "shape": [
+        1,
+        384,
+        32,
+        32
+      ],
+      "output_dtype": "torch.bfloat16"
+    }
+  },
+  "same_device_comparisons": [
+    {
+      "dtype": "bf16",
+      "candidate": "linear_separate_bias",
+      "reference": "conv2d",
+      "max_abs": 0.015625,
+      "mean_abs": 0.0006221259267628435,
+      "rmse": 0.001590254035882659,
+      "relative_l2_pct": 0.28605933801368877,
+      "p99_abs": 0.0078125,
+      "elementwise_equal_pct": 73.96977742513022,
+      "max_diff_index": [
+        0,
+        5,
+        3,
+        27
+      ],
+      "candidate_at_max_diff": 2.09375,
+      "reference_at_max_diff": 2.078125
+    },
+    {
+      "dtype": "bf16",
+      "candidate": "linear_with_bias",
+      "reference": "conv2d",
+      "max_abs": 0.00390625,
+      "mean_abs": 1.0746739083818586e-07,
+      "rmse": 1.795063855224615e-05,
+      "relative_l2_pct": 0.003229011004099367,
+      "p99_abs": 0.0,
+      "elementwise_equal_pct": 99.98423258463541,
+      "max_diff_index": [
+        0,
+        19,
+        31,
+        27
+      ],
+      "candidate_at_max_diff": -0.81640625,
+      "reference_at_max_diff": -0.8203125
+    },
+    {
+      "dtype": "bf16",
+      "candidate": "linear_with_bias",
+      "reference": "linear_separate_bias",
+      "max_abs": 0.015625,
+      "mean_abs": 0.0006220839902463619,
+      "rmse": 0.0015902140167330118,
+      "relative_l2_pct": 0.2860526511650614,
+      "p99_abs": 0.0078125,
+      "elementwise_equal_pct": 73.97232055664062,
+      "max_diff_index": [
+        0,
+        5,
+        3,
+        27
+      ],
+      "candidate_at_max_diff": 2.078125,
+      "reference_at_max_diff": 2.09375
+    }
+  ],
+  "reference_accuracy": [
+    {
+      "dtype": "bf16",
+      "variant": "conv2d",
+      "max_abs": 0.0078006526455283165,
+      "mean_abs": 0.00062510128211179,
+      "rmse": 0.0009247191325735749,
+      "relative_l2_pct": 0.1663412711309806,
+      "p99_abs": 0.0033750606704415964,
+      "elementwise_equal_pct": 0.00025431315104166663,
+      "max_diff_index": [
+        0,
+        66,
+        25,
+        14
+      ],
+      "candidate_at_max_diff": 2.171875,
+      "reference_at_max_diff": 2.1796756526455283
+    },
+    {
+      "dtype": "bf16",
+      "variant": "linear_separate_bias",
+      "max_abs": 0.015115805203095078,
+      "mean_abs": 0.0008387890876812541,
+      "rmse": 0.001306831811064514,
+      "relative_l2_pct": 0.2350768540950205,
+      "p99_abs": 0.004882916154019759,
+      "elementwise_equal_pct": 0.0,
+      "max_diff_index": [
+        0,
+        247,
+        7,
+        21
+      ],
+      "candidate_at_max_diff": -2.09375,
+      "reference_at_max_diff": -2.078634194796905
+    },
+    {
+      "dtype": "bf16",
+      "variant": "linear_with_bias",
+      "max_abs": 0.0078006526455283165,
+      "mean_abs": 0.0006251012770829654,
+      "rmse": 0.0009247191291861705,
+      "relative_l2_pct": 0.16634127052164405,
+      "p99_abs": 0.0033750606704415964,
+      "elementwise_equal_pct": 0.00025431315104166663,
+      "max_diff_index": [
+        0,
+        66,
+        25,
+        14
+      ],
+      "candidate_at_max_diff": 2.171875,
+      "reference_at_max_diff": 2.1796756526455283
+    }
+  ]
+}

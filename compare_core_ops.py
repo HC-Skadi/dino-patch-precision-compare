@@ -14,7 +14,8 @@ import torch
 import torch.nn.functional as F
 
 CASES = ("linear", "layer_norm", "gelu_erf", "gelu_native", "sdpa", "patch_embed")
-DTYPES = {"fp32": torch.float32, "fp16": torch.float16}
+DTYPES = {"fp32": torch.float32, "fp16": torch.float16, "bf16": torch.bfloat16}
+DEFAULT_DTYPES = ("fp32", "fp16")
 SPEC = dict(batch=1, tokens=1029, hidden=384, intermediate=1536, heads=6,
             head_dim=64, image=512, patch=16, layer_norm_eps=1e-5, seed=20261109)
 
@@ -135,7 +136,7 @@ def main():
     parser.add_argument("--inputs", type=Path, default=Path(__file__).resolve().with_name("inputs.npz"))
     parser.add_argument("--compare", type=Path, help="Other machine's result directory")
     parser.add_argument("--cases", nargs="+", choices=CASES, default=list(CASES))
-    parser.add_argument("--dtypes", nargs="+", choices=DTYPES, default=list(DTYPES))
+    parser.add_argument("--dtypes", nargs="+", choices=DTYPES, default=list(DEFAULT_DTYPES))
     args = parser.parse_args()
     if args.device.startswith("npu"):
         import torch_npu
@@ -154,7 +155,9 @@ def main():
         flags = dict(matmul_allow_tf32=torch.backends.cuda.matmul.allow_tf32,
                      cudnn_allow_tf32=torch.backends.cudnn.allow_tf32,
                      fp16_reduced_precision_reduction=
-                     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction)
+                     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction,
+                     bf16_reduced_precision_reduction=
+                     torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction)
         device_name = torch.cuda.get_device_name(device)
     elif device.type == "npu":
         torch.npu.matmul.allow_hf32 = False

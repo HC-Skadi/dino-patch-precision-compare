@@ -1,0 +1,9 @@
+/home/hc/envs/gns83/lib/python3.10/site-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+Device: npu:7 (Ascend910B3); same inputs and weights, TF32/HF32 disabled
+dtype  candidate vs reference                                max_abs         RMSE     equal(%)
+bf16   linear_separate_bias vs conv2d                    1.56250e-02  1.59025e-03     73.96978
+bf16   linear_with_bias vs conv2d                        3.90625e-03  1.79506e-05     99.98423
+bf16   linear_with_bias vs linear_separate_bias          1.56250e-02  1.59021e-03     73.97232
+
+Saved: /home/hc/diagnostics/dino_core_ops_bf16_compare_20261110/patch_npu_bf16_results

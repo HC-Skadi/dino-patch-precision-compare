@@ -1,8 +1,8 @@
 # DINO 算子与 Patch embedding 精度比较
 
-用于比较 A100 与 Ascend NPU 的 FP32、FP16 数值结果。仓库包含独立测试脚本、固定合成输入和已完成的 NPU 输出，不包含原始模型权重或真实业务数据。
+用于比较 A100 与 Ascend NPU 的 FP32、FP16、BF16 数值结果。仓库包含独立测试脚本、固定合成输入和已完成的 NPU 输出，不包含原始模型权重或真实业务数据。
 
-NPU 基准于 2026-11-09 在 Ascend 910B3 上完成。测试包约 55 MiB，不需要 Git LFS；拉取后即可使用相同输入进行比较。
+FP32 / FP16 的 NPU 基准于 2026-11-09 在 Ascend 910B3 上完成。BF16 使用独立入口和输出目录，保留原有结果；具体命令与测试记录见 `BF16_README.md`。
 
 ## 在 A100 上运行
 
@@ -25,6 +25,14 @@ bash run_a100.sh cuda:1
 
 不会安装依赖，不会运行完整模型，也不会重新生成输入。每种算子、每种精度只执行一次，不测量性能。
 
+## 在 A100 上增加 BF16 比较
+
+```bash
+bash run_a100_bf16.sh
+```
+
+这条命令仅测试 BF16，使用同一份 `inputs.npz`，并比较已保存的 BF16 NPU 输出。结果分别保存到 `a100_bf16_results/` 和 `patch_a100_bf16_comparison/`，不会覆盖此前的 FP32 / FP16 结果。
+
 ## 查看结果
 
 | 文件 | 内容 |
@@ -40,7 +48,7 @@ bash run_a100.sh cuda:1
 
 ## 测试范围
 
-核心算子共 6 项，分别执行 FP32、FP16：
+核心算子共 6 项，原入口执行 FP32、FP16，BF16 入口单独执行 BF16：
 
 - Linear
 - LayerNorm
@@ -109,10 +117,13 @@ CPU FP64 仅用于生成数值参考，待测算子在指定设备上完整执�
 - `compare_core_ops.py`：独立核心算子测试与跨设备比较。
 - `compare_patch_precision.py`：三种 Patch 实现的同设备比较。
 - `compare_patch_to_a100.py`：保存的 NPU Patch 输出与保存的 A100 原生 Conv2d 比较。
+- `run_a100_bf16.sh`、`BF16_README.md`：BF16 执行入口与测试记录。
+- [最新适配方案](LATEST_ADAPTATION_PLAN.md)：第六模型当前实现、精度选择、实验结论与下一步安排；本仓库不包含完整模型工作包。
 - `inputs.npz`：固定合成输入和测试权重。
 - `npu_results/`、`patch_npu_results/`：原始 NPU 数组、指标、环境和检查记录。
+- `npu_bf16_results/`、`patch_npu_bf16_results/`：同一份输入的 BF16 NPU 结果。
 - `NPU_RUN.log`、`PATCH_NPU_RUN.log`：NPU 实验日志。
 - [核心算子说明](CORE_OPS_README.md)、[Patch 专项说明](PATCH_PRECISION_README.md)：详细测试口径。
 - `SHA256SUMS`：发布时的文件校验清单。
 
-新生成的 A100 结果及复现实验结果默认被 Git 忽略，避免误提交。原始测试脚本、输入和 NPU 数组的 SHA256 已与执行报告核对一致。
+新生成的 A100 结果及复现实验结果默认被 Git 忽略，避免误提交。执行报告中的脚本摘要对应当次实验版本；新增 BF16 支持没有改写旧实验报告或数组。

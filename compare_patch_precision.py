@@ -3,7 +3,7 @@ import argparse
 import json
 from pathlib import Path
 
-from compare_core_ops import DTYPES, compare_saved, metrics, sha256, write_csv
+from compare_core_ops import DEFAULT_DTYPES, DTYPES, compare_saved, metrics, sha256, write_csv
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -47,7 +47,7 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--inputs", type=Path, default=Path(__file__).resolve().with_name("inputs.npz"))
     parser.add_argument("--compare", type=Path, help="Other device's patch result directory")
-    parser.add_argument("--dtypes", nargs="+", choices=DTYPES, default=list(DTYPES))
+    parser.add_argument("--dtypes", nargs="+", choices=DTYPES, default=list(DEFAULT_DTYPES))
     args = parser.parse_args()
     if args.device.startswith("npu"):
         import torch_npu
@@ -68,7 +68,9 @@ def main():
         device_name = torch.cuda.get_device_name(device)
         flags = dict(matmul_allow_tf32=False, cudnn_allow_tf32=False,
                      fp16_reduced_precision_reduction=
-                     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction)
+                     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction,
+                     bf16_reduced_precision_reduction=
+                     torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction)
     elif device.type == "cpu":
         device_name, flags = "CPU smoke test", {}
     else:
@@ -113,6 +115,7 @@ def main():
                   spec=dict(image_shape=list(cpu[0].shape), weight_shape=list(cpu[1].shape),
                             bias_shape=list(cpu[2].shape), variants=list(VARIANTS)),
                   input_kind="fixed synthetic fixture shared with the core operator comparison",
+                  dtypes=args.dtypes,
                   reference="CPU FP64 Conv2d using the same dtype-rounded input and weights",
                   inputs_sha256=sha256(args.inputs), outputs_sha256=sha256(args.out / "outputs.npz"),
                   script_sha256=sha256(__file__), helper_script_sha256=sha256(Path(__file__).with_name("compare_core_ops.py")),
