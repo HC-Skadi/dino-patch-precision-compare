@@ -1,0 +1,133 @@
+{
+  "device": "npu:7",
+  "torch": "2.9.0+cpu",
+  "numpy": "2.2.6",
+  "cuda_version": null,
+  "flash_attn": null,
+  "transformers": "5.13.0",
+  "torch_npu": "2.9.0",
+  "backend": {
+    "entry": "transformers.integrations.sdpa_attention.sdpa_attention_forward",
+    "hf_sdpa_source_sha256": "fdf62fb0eb9b5dc0a6796a7e526015865267f271a0d5ac8377968ad05d1454b8",
+    "kernel_selection": "torch_npu SDPA dispatch; no kernel profiling in this test"
+  },
+  "dtype": "bf16",
+  "spec": {
+    "batch": 1,
+    "q_heads": 96,
+    "kv_heads": 8,
+    "head_dim": 128,
+    "length": 64,
+    "seed": 20261110,
+    "dropout": 0.0,
+    "scale": 0.08838834764831845,
+    "causal_alignment": "bottom_right",
+    "cases": [
+      "prefill",
+      "decode",
+      "chunk_decode"
+    ]
+  },
+  "input_kind": "fixed synthetic post-RoPE operator fixture; not captured model activations",
+  "inputs_fp32_sha256": "90fae50b1ada8aa715021df51584e01325f265898de76231aa0f403d85800120",
+  "inputs_rounded_sha256": "c8cf51af32a1182284ccd8d428c27444466d32e1b8b3ae61e37b4d5713763d8c",
+  "outputs_sha256": "e03add7169c9d860a4840eceb9abf92066b663922ea9d5621bbbdbe92dc6f8b5",
+  "script_sha256": "ffca019fd9affdc98634f5cc91296682e952f029ea09be7145086b81240cd438",
+  "helper_script_sha256": "bf49a1564c2b615c65c9f53471998e3b1887bd19ecbe50152a4c9d3f6079df71",
+  "output_layout": "BSHD",
+  "storage": "uint16 original FP16/BF16 bits, no output requantization",
+  "output_metadata": {
+    "prefill": {
+      "q_shape": [
+        1,
+        96,
+        64,
+        128
+      ],
+      "kv_shape": [
+        1,
+        8,
+        64,
+        128
+      ],
+      "output_shape": [
+        1,
+        64,
+        96,
+        128
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "decode": {
+      "q_shape": [
+        1,
+        96,
+        1,
+        128
+      ],
+      "kv_shape": [
+        1,
+        8,
+        64,
+        128
+      ],
+      "output_shape": [
+        1,
+        1,
+        96,
+        128
+      ],
+      "output_dtype": "torch.bfloat16"
+    },
+    "chunk_decode": {
+      "q_shape": [
+        1,
+        96,
+        4,
+        128
+      ],
+      "kv_shape": [
+        1,
+        8,
+        64,
+        128
+      ],
+      "output_shape": [
+        1,
+        4,
+        96,
+        128
+      ],
+      "output_dtype": "torch.bfloat16"
+    }
+  },
+  "rows": [
+    {
+      "case": "prefill",
+      "dtype": "bf16",
+      "max_abs": 0.009667651006315392,
+      "mean_abs": 0.00045655733424831236,
+      "rmse": 0.0006621793387238727,
+      "relative_l2_pct": 0.1843701429526867
+    },
+    {
+      "case": "decode",
+      "dtype": "bf16",
+      "max_abs": 0.0025625706163679984,
+      "mean_abs": 0.0003149885992484908,
+      "rmse": 0.000417240344801236,
+      "relative_l2_pct": 0.2133171329300388
+    },
+    {
+      "case": "chunk_decode",
+      "dtype": "bf16",
+      "max_abs": 0.003858180601921557,
+      "mean_abs": 0.00031833304700780706,
+      "rmse": 0.0004228859542295215,
+      "relative_l2_pct": 0.21090100195106698
+    }
+  ],
+  "timing": [],
+  "scope": "attention only; no model weights, QKV projections, RoPE, cache writes or generation",
+  "timing_scope": "device-resident adapter call including layout copies and mask preparation"
+}

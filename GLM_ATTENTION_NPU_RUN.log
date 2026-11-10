@@ -1,0 +1,11 @@
+/home/hc/envs/gns83/lib/python3.10/site-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+Device: npu:7 (Ascend910B3)
+Backend: transformers.integrations.sdpa_attention.sdpa_attention_forward; dtype: bf16; Q heads=96, KV heads=8, head_dim=128
+Accuracy reference: CPU FP64 on the identical dtype-rounded Q/K/V
+case                max_abs         RMSE    rel_L2(%)
+prefill         9.66765e-03  6.62179e-04  1.84370e-01
+decode          2.56257e-03  4.17240e-04  2.13317e-01
+chunk_decode    3.85818e-03  4.22886e-04  2.10901e-01
+
+Saved: /home/hc/diagnostics/glm_attention_compare_20261110/glm_attn_npu_results

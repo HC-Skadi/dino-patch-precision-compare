@@ -63,4 +63,16 @@ CUDA 环境需要已有 PyTorch CUDA、NumPy 和 FlashAttention 2。脚本不会
 
 脚本已实现并上传到 node02 的 `/home/hc/diagnostics/glm_attention_compare_20261110/`。9 项 CPU 单元测试全部通过，日志见 `GLM_ATTENTION_CPU_TEST.log`，覆盖输入身份、GQA、布局、缓存位置掩码、原始位存储、比较方向和已安装 Transformers 5.13.0 的 SDPA 分发逻辑。日志中的零差异表来自模拟数组，仅用于验证比较程序。
 
-CUDA FA2 / NPU SDPA 实际精度实验尚未执行，不能将 CPU 测试通过记为设备精度通过。
+2026-11-10 已在 node02 的 Ascend 910B3、NPU 7 上完成 BF16、batch1、KV 长度 64 的三个场景。使用现有 PyTorch / torch_npu 2.9.0 和 Transformers 5.13.0 环境，没有安装依赖，没有加载模型权重，每个场景仅执行一次设备计算，没有额外计时。
+
+下表以同一份 BF16 舍入输入的 CPU FP64 输出为参考：
+
+| 场景 | 最大绝对差 | RMSE | 相对 L2 差（%） |
+|---|---:|---:|---:|
+| prefill | 9.66765e-3 | 6.62179e-4 | 0.184370 |
+| decode | 2.56257e-3 | 4.17240e-4 | 0.213317 |
+| chunk_decode | 3.85818e-3 | 4.22886e-4 | 0.210901 |
+
+原始输出、精度指标和环境记录保存在 `glm_attn_npu_results/`，运行日志为 `GLM_ATTENTION_NPU_RUN.log`。远程目录为 `/home/hc/diagnostics/glm_attention_compare_20261110/glm_attn_npu_results/`。日志中仅出现 PyTorch 精度开关 API 的弃用提示，三个场景均正常完成。
+
+CUDA FA2 尚未执行。本轮结果用于建立 NPU 基准，CUDA / NPU 的直接差异需要按上述 A100 命令生成 `comparison.csv` 后判断。
